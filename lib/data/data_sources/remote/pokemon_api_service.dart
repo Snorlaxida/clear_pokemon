@@ -7,7 +7,10 @@ import 'package:clear_pokemon/data/model/pokemon_details_model.dart';
 const baseUrl = 'pokeapi.co';
 
 class PokemonApiService {
-  final client = Dio();
+  final Dio client;
+
+  PokemonApiService({required this.client});
+
   Future<PokePageModel> getPokemonPage({int startWith = 0}) async {
     final queryParameters = {
       'limit': '20',
