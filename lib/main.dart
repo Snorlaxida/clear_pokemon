@@ -73,13 +73,9 @@
 // }
 
 import 'package:clear_pokemon/injection_container.dart';
-import 'package:clear_pokemon/presentation/bloc/pokemon/poke_bloc.dart';
-import 'package:clear_pokemon/presentation/cubit/internet/internet_cubit.dart';
-import 'package:clear_pokemon/presentation/cubit/navigation/nav_cubit.dart';
-import 'package:clear_pokemon/presentation/cubit/pokemon_details/pokemon_details_cubit.dart';
-import 'package:clear_pokemon/presentation/navigation/app_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_presentation/my_presentation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
