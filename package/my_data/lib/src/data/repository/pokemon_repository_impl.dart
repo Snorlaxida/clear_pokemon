@@ -23,7 +23,8 @@ class PokemonRepositoryImpl implements PokemonRepository {
 
   @override
   Future<PokePage> getPokemonPage({int startWith = 0}) async {
-    final pokePageModel = await pokemonApiService.getPokemonPage();
+    final pokePageModel =
+        await pokemonApiService.getPokemonPage(startWith: startWith);
     return pokePageModel.toEntity();
   }
 
