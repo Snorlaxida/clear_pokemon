@@ -1,19 +1,24 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:data/data.dart';
 import 'package:dio/dio.dart';
+import 'package:domain/domain.dart';
 import 'package:get_it/get_it.dart';
-import 'package:my_data/data.dart';
-import 'package:my_domain/my_domain.dart';
-import 'package:my_presentation/my_presentation.dart';
+import 'package:navigation/navigation.dart';
+import 'package:pokemon/pokemon.dart';
+import 'package:sqflite/sqflite.dart';
 
-final sl = GetIt.instance;
+final GetIt sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
   sl.registerSingleton<Dio>(Dio());
 
-  sl.registerSingleton<PokemonApiService>(
-      PokemonApiService(client: sl.get<Dio>()));
+  sl.registerSingleton<Database>(await DatabaseService.getDb());
 
-  sl.registerSingleton<DatabaseService>(DatabaseService());
+  sl.registerSingleton<DatabaseService>(
+      DatabaseService(database: sl.get<Database>()));
+
+  sl.registerSingleton<PokemonApiService>(PokemonApiService(
+      client: sl.get<Dio>(), databaseService: sl.get<DatabaseService>()));
 
   sl.registerSingleton<PokemonRepository>(
     PokemonRepositoryImpl(

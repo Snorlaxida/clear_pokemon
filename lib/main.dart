@@ -1,7 +1,9 @@
-import 'package:clear_pokemon/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_presentation/my_presentation.dart';
+import 'package:navigation/navigation.dart';
+import 'package:nested/nested.dart';
+import 'package:pokemon/pokemon.dart';
+import 'injection_container.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,18 +21,18 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
           appBarTheme: const AppBarTheme(color: Colors.red, centerTitle: true)),
       home: MultiBlocProvider(
-        providers: [
+        providers: <SingleChildWidget>[
           BlocProvider<PokeBloc>(
-            create: (context) => sl(),
+            create: (BuildContext context) => sl(),
           ),
           BlocProvider<NavCubit>(
-            create: (context) => sl(),
+            create: (BuildContext context) => sl(),
           ),
           BlocProvider<InternetCubit>(
-            create: (context) => sl(),
+            create: (BuildContext context) => sl(),
           ),
           BlocProvider<PokemonDetailsCubit>(
-            create: (context) => sl(),
+            create: (BuildContext context) => sl(),
           ),
         ],
         child: const AppNavigator(),

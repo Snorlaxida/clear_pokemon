@@ -113,6 +113,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  core:
+    dependency: "direct main"
+    description:
+      path: core
+      relative: true
+    source: path
+    version: "0.0.1"
   crypto:
     dependency: transitive
     description:
@@ -121,6 +128,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  data:
+    dependency: "direct main"
+    description:
+      path: data
+      relative: true
+    source: path
+    version: "0.0.1"
   dbus:
     dependency: transitive
     description:
@@ -137,6 +151,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.3+1"
+  domain:
+    dependency: "direct main"
+    description:
+      path: domain
+      relative: true
+    source: path
+    version: "0.0.1"
   equatable:
     dependency: "direct main"
     description:
@@ -272,24 +293,10 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
-  my_data:
+  navigation:
     dependency: "direct main"
     description:
-      path: "package/my_data"
-      relative: true
-    source: path
-    version: "0.0.1"
-  my_domain:
-    dependency: "direct main"
-    description:
-      path: "package/my_domain"
-      relative: true
-    source: path
-    version: "0.0.1"
-  my_presentation:
-    dependency: "direct main"
-    description:
-      path: "package/my_presentation"
+      path: navigation
       relative: true
     source: path
     version: "0.0.1"
@@ -349,6 +356,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.9.0"
+  pokemon:
+    dependency: "direct main"
+    description:
+      path: "feature/pokemon"
+      relative: true
+    source: path
+    version: "0.0.1"
   provider:
     dependency: transitive
     description:
