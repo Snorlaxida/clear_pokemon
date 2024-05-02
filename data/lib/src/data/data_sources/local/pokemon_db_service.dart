@@ -1,4 +1,6 @@
 import 'package:core/constants/constants.dart';
+import 'package:core/mapper/poke_list_part_mapper.dart';
+import 'package:core/mapper/pokemon_details_mapper.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -8,23 +10,16 @@ import '../../model/pokemon_details_model.dart';
 class DatabaseService {
   final Database database;
 
+  PokemonDetailsMapper pokemonDetailsMapper = PokemonDetailsMapper();
+  PokeListPartMapper pokeListPartMapper = PokeListPartMapper();
+
   DatabaseService({required this.database});
 
   static Future<Database> getDb() async {
     return openDatabase(
       join(await getDatabasesPath(), dbName),
       onCreate: (Database db, int version) async {
-        await db.execute('''
-        CREATE TABLE "pokemon" (
-          "id"	INTEGER UNIQUE,
-          "name"	TEXT,
-          "types"	TEXT,
-          "image"	BLOB,
-          "height"	INTEGER,
-          "weight"	INTEGER,
-          PRIMARY KEY("id")
-        );
-        ''');
+        await db.execute(createDb);
       },
       version: version,
     );
@@ -40,12 +35,11 @@ class DatabaseService {
       where: 'id = ?',
       whereArgs: <Object?>[id],
     );
-    if (pokemonDetailsJson.isEmpty ||
-        PokemonDetailsModel.fromDbJson(pokemonDetailsJson[0]).image == null) {
+    if (pokemonDetailsJson.isEmpty) {
       return null;
     }
 
-    return PokemonDetailsModel.fromDbJson(pokemonDetailsJson[0]);
+    return pokemonDetailsMapper.fromDbJson(pokemonDetailsJson[0]);
   }
 
   Future<List<PokeListPartModel>?> getAllPokeListParts() async {
@@ -53,6 +47,8 @@ class DatabaseService {
     if (maps.isEmpty) {
       return null;
     }
-    return maps.map(PokeListPartModel.fromDbJson).toList();
+    return maps
+        .map((Map<String, dynamic> e) => pokeListPartMapper.fromDbJson(e))
+        .toList();
   }
 }

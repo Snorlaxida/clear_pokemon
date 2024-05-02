@@ -1,6 +1,5 @@
 import 'package:core/constants/constants.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/services.dart';
 import '../../model/poke_page_model.dart';
 import '../../model/pokemon_details_model.dart';
 import '../local/pokemon_db_service.dart';
@@ -37,9 +36,7 @@ class PokemonApiService {
     try {
       final Response<dynamic> response = await client.getUri(uri);
       final Map<String, dynamic> json = response.data;
-      json['sprites']['other']['official-artwork']['front_default'] =
-          await _convertImageUrlToUint8List(
-              json['sprites']['other']['official-artwork']['front_default']);
+      ;
       await databaseService.addPokemon(PokemonDetailsModel.fromJson(json));
       return PokemonDetailsModel.fromJson(json);
     } catch (e) {
@@ -48,8 +45,8 @@ class PokemonApiService {
   }
 }
 
-Future<Uint8List> _convertImageUrlToUint8List(String url) async {
-  final NetworkAssetBundle bundle = NetworkAssetBundle(Uri.parse(url));
-  final Uint8List data = (await bundle.load(url)).buffer.asUint8List();
-  return data;
-}
+// Future<Uint8List> _convertImageUrlToUint8List(String url) async {
+//   final NetworkAssetBundle bundle = NetworkAssetBundle(Uri.parse(url));
+//   final Uint8List data = (await bundle.load(url)).buffer.asUint8List();
+//   return data;
+// }

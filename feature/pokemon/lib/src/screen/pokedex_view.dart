@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navigation/navigation.dart';
@@ -80,15 +81,18 @@ class _PokedexViewState extends State<PokedexView> {
                         child: GridTile(
                           child: Column(
                             children: <Widget>[
-                              Container(
-                                width: 150,
-                                height: 150,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: Image.memory(
-                                          state.pokeList[index].image!,
-                                        ).image,
-                                        fit: BoxFit.cover)),
+                              CachedNetworkImage(
+                                imageUrl: state.pokeList[index].imageUrl,
+                                imageBuilder: (BuildContext context,
+                                        ImageProvider<Object> imageProvider) =>
+                                    Container(
+                                  width: 150,
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover)),
+                                ),
                               ),
                               Text(state.pokeList[index].name)
                             ],

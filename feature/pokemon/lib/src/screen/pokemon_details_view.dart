@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:domain/domain.dart' show PokemonDetails;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,17 +23,25 @@ class PokemonDetailsView extends StatelessWidget {
               ? Column(
                   children: <Widget>[
                     Center(
-                      child: Container(
+                        child: CachedNetworkImage(
+                      imageUrl: state.imageUrl,
+                      placeholder: (BuildContext context, String url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget:
+                          (BuildContext context, String url, Object error) =>
+                              const Icon(Icons.error),
+                      imageBuilder: (BuildContext context,
+                              ImageProvider<Object> imageProvider) =>
+                          Container(
                         width: 300,
                         height: 300,
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: Image.memory(
-                                  state.image!,
-                                ).image,
-                                fit: BoxFit.cover)),
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        )),
                       ),
-                    ),
+                    )),
                     const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

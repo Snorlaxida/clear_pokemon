@@ -14,7 +14,7 @@ class PokemonDetailsCubit extends Cubit<PokemonDetails?> {
     emit(PokemonDetails(
       pokemonId: pokemonInfo.pokemonId,
       name: pokemonInfo.name,
-      image: pokemonInfo.image,
+      imageUrl: pokemonInfo.imageUrl,
       types: pokemonInfo.types,
       height: pokemonInfo.height,
       weight: pokemonInfo.weight,
