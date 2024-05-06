@@ -1,4 +1,3 @@
-import 'package:core/mapper/poke_list_part_mapper.dart';
 import 'package:core/mapper/poke_page_mapper.dart';
 import 'package:core/mapper/pokemon_details_mapper.dart';
 import 'package:domain/domain.dart'
@@ -13,10 +12,6 @@ class PokemonRepositoryImpl implements PokemonRepository {
   final PokemonApiService pokemonApiService;
   final DatabaseService databaseService;
 
-  final PokemonDetailsMapper pokemonDetailsMapper = PokemonDetailsMapper();
-  final PokePageMapper pokePageMapper = PokePageMapper();
-  final PokeListPartMapper pokeListPartMapper = PokeListPartMapper();
-
   PokemonRepositoryImpl({
     required this.pokemonApiService,
     required this.databaseService,
@@ -27,14 +22,14 @@ class PokemonRepositoryImpl implements PokemonRepository {
     final PokemonDetailsModel pokeDetailsModel =
         await pokemonApiService.getPokemonDetails(pokemonId);
 
-    return pokemonDetailsMapper.toEntity(pokeDetailsModel);
+    return PokemonDetailsMapper.toModel(pokeDetailsModel);
   }
 
   @override
   Future<PokePage> getPokemonPage({int startWith = 0}) async {
     final PokePageModel pokePageModel =
         await pokemonApiService.getPokemonPage(startWith: startWith);
-    return pokePageMapper.toEntity(pokePageModel);
+    return PokePageMapper.toEntity(pokePageModel);
   }
 
   @override
@@ -42,7 +37,7 @@ class PokemonRepositoryImpl implements PokemonRepository {
     final List<PokeListPartModel>? pokeListPartModel =
         await databaseService.getAllPokeListParts();
 
-    return pokePageMapper.toEntity(
+    return PokePageMapper.toEntity(
       PokePageModel(
         hasNext: false,
         pokeList: pokeListPartModel,

@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'package:data/data.dart' show PokemonDetailsModel;
+import 'package:data/data.dart'
+    show PokemonDetailsFromApiEntity, PokemonDetailsFromDbEntity;
 import 'package:domain/domain.dart' show PokemonDetails;
 
 class PokemonDetailsMapper {
-  PokemonDetails toEntity(PokemonDetailsModel pokemonDetailsModel) {
+  static PokemonDetails toModel(PokemonDetailsModel pokemonDetailsModel) {
     return PokemonDetails(
       pokemonId: pokemonDetailsModel.pokemonId,
       imageUrl: pokemonDetailsModel.imageUrl,
@@ -14,7 +15,7 @@ class PokemonDetailsMapper {
     );
   }
 
-  PokemonDetailsModel fromDbJson(Map<String, dynamic> json) {
+  static PokemonDetailsModel fromDbJson(Map<String, dynamic> json) {
     final int pokemonId = json['id'];
     final String name = json['name'];
     final String imageUrl = json['image'];

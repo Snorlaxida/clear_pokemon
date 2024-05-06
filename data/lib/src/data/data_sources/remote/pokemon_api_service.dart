@@ -1,7 +1,9 @@
 import 'package:core/constants/constants.dart';
 import 'package:dio/dio.dart';
-import '../../model/poke_page_model.dart';
-import '../../model/pokemon_details_model.dart';
+import 'package:domain/domain.dart';
+import '../../entity/poke_page/poke_page_from_api_entity.dart';
+import '../../entity/pokemon_details/pokemon_details_from_api_entity.dart';
+import '../../entity/pokemon_details/pokemon_details_from_db_entity.dart';
 import '../local/pokemon_db_service.dart';
 
 class PokemonApiService {
@@ -13,22 +15,21 @@ class PokemonApiService {
     required this.client,
   });
 
-  Future<PokePageModel> getPokemonPage({int startWith = 0}) async {
+  Future<PokePageFromApiEntity> getPokemonPage({int startWith = 0}) async {
     final Map<String, String> queryParameters = <String, String>{
       'limit': '20',
       'offset': startWith.toString(),
     };
-
     final Uri uri = Uri.https(baseUrl, 'api/v2/pokemon', queryParameters);
     final Response<dynamic> response = await client.getUri(uri);
     final Map<String, dynamic> json = response.data;
 
-    return PokePageModel.fromJson(json);
+    return PokePageFromApiEntity.fromJson(json);
   }
 
-  Future<PokemonDetailsModel> getPokemonDetails(int pokemonId) async {
+  Future<PokemonDetailsFromApiEntity> getPokemonDetails(int pokemonId) async {
     final Uri uri = Uri.https(baseUrl, 'api/v2/pokemon/$pokemonId');
-    final PokemonDetailsModel? pokemonDetail =
+    final PokemonDetailsFromDbEntity? pokemonDetail =
         await databaseService.getPokemonDetails(pokemonId);
     if (pokemonDetail != null) {
       return pokemonDetail;
@@ -36,7 +37,6 @@ class PokemonApiService {
     try {
       final Response<dynamic> response = await client.getUri(uri);
       final Map<String, dynamic> json = response.data;
-      ;
       await databaseService.addPokemon(PokemonDetailsModel.fromJson(json));
       return PokemonDetailsModel.fromJson(json);
     } catch (e) {
@@ -44,9 +44,3 @@ class PokemonApiService {
     }
   }
 }
-
-// Future<Uint8List> _convertImageUrlToUint8List(String url) async {
-//   final NetworkAssetBundle bundle = NetworkAssetBundle(Uri.parse(url));
-//   final Uint8List data = (await bundle.load(url)).buffer.asUint8List();
-//   return data;
-// }
