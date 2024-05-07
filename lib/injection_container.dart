@@ -1,30 +1,28 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:data/api_core/helpers/interceptors/exception_interceptor.dart';
+import 'package:data/api_core/helpers/interceptors/logger_interceptor.dart';
 import 'package:data/data.dart';
 import 'package:dio/dio.dart';
 import 'package:domain/domain.dart';
 import 'package:get_it/get_it.dart';
 import 'package:navigation/navigation.dart';
 import 'package:pokemon/pokemon.dart';
-import 'package:sqflite/sqflite.dart';
 
 final GetIt sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
-  sl.registerSingleton<Dio>(Dio());
+  sl.registerSingleton<LoggerInterceptor>(LoggerInterceptor());
+  sl.registerSingleton<ErrorInterceptor>(ErrorInterceptor());
+  sl.registerSingleton<Dio>(Dio()
+    ..interceptors.addAll(<Interceptor>[
+      sl.get<LoggerInterceptor>(),
+      sl.get<ErrorInterceptor>()
+    ]));
 
-  sl.registerSingleton<Database>(await DatabaseService.getDb());
-
-  sl.registerSingleton<DatabaseService>(
-      DatabaseService(database: sl.get<Database>()));
-
-  sl.registerSingleton<PokemonApiService>(PokemonApiService(
-      client: sl.get<Dio>(), databaseService: sl.get<DatabaseService>()));
+  sl.registerSingleton<PokemonApiService>(
+      PokemonApiService(client: sl.get<Dio>()));
 
   sl.registerSingleton<PokemonRepository>(
-    PokemonRepositoryImpl(
-      pokemonApiService: sl.get<PokemonApiService>(),
-      databaseService: sl.get<DatabaseService>(),
-    ),
+    PokemonRepositoryImpl(pokemonApiService: sl.get<PokemonApiService>()),
   );
 
   sl.registerSingleton<GetPokemonDetailsUsecase>(GetPokemonDetailsUsecase(
@@ -35,15 +33,8 @@ Future<void> initializeDependencies() async {
     pokemonRepository: sl.get<PokemonRepository>(),
   ));
 
-  sl.registerSingleton<GetPokemonPageFromDbUsecase>(GetPokemonPageFromDbUsecase(
-    pokemonRepository: sl.get<PokemonRepository>(),
-  ));
-
   sl.registerFactory<PokeBloc>(
-    () => PokeBloc(
-      pokemonPageUsecase: sl.get<GetPokemonPageUsecase>(),
-      pokemonPageFromDbUsecase: sl.get<GetPokemonPageFromDbUsecase>(),
-    ),
+    () => PokeBloc(pokemonPageUsecase: sl.get<GetPokemonPageUsecase>()),
   );
 
   sl.registerSingleton<PokemonDetailsCubit>(PokemonDetailsCubit(
@@ -51,9 +42,4 @@ Future<void> initializeDependencies() async {
 
   sl.registerFactory<NavCubit>(
       () => NavCubit(pokemonDetailsCubit: sl.get<PokemonDetailsCubit>()));
-
-  sl.registerSingleton<Connectivity>(Connectivity());
-
-  sl.registerFactory<InternetCubit>(
-      () => InternetCubit(connectivity: sl.get<Connectivity>()));
 }

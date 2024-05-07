@@ -1,13 +1,18 @@
-import 'package:data/data.dart' show PokePageModel;
+import 'package:data/data.dart' show PokeListPartEntity, PokePageEntity;
 import 'package:domain/domain.dart' show PokePage;
 
-import 'poke_list_part_from_api_mapper.dart';
+import 'poke_list_part_mapper.dart';
 
 class PokePageMapper {
-  static PokePage toEntity(PokePageModel pokePage) {
+  static PokePage fromEntity(PokePageEntity pokePageEntity) {
     return PokePage(
-      hasNext: pokePage.hasNext,
-      pokeList: pokePage.pokeList?.map(PokeListPartMapper.toEntity).toList(),
+      hasNext: pokePageEntity.next != null,
+      pokeList: pokePageEntity.results
+          ?.map(
+            (Map<String, dynamic> e) =>
+                PokeListPartMapper.fromEntity(PokeListPartEntity.fromJson(e)),
+          )
+          .toList(),
     );
   }
 }

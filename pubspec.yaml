@@ -29,6 +29,8 @@ dependencies:
     path: 'navigation'
   core:
     path: 'core'
+  logger: ^2.2.0
+  fluttertoast: ^8.2.5
 
 
 dev_dependencies:

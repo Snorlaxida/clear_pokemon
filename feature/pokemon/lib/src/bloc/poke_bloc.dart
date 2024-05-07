@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:domain/domain.dart'
-    show GetPokemonPageFromDbUsecase, GetPokemonPageUsecase, PokeListPart;
+import 'package:domain/domain.dart' show GetPokemonPageUsecase, PokeListPart;
 import 'package:domain/src/domain/entity/poke_page.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,18 +21,13 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 
 class PokeBloc extends Bloc<PokeEvent, PokeState> {
   final GetPokemonPageUsecase pokemonPageUsecase;
-  final GetPokemonPageFromDbUsecase pokemonPageFromDbUsecase;
 
   PokeBloc({
     required this.pokemonPageUsecase,
-    required this.pokemonPageFromDbUsecase,
   }) : super(const PokeState()) {
     on<LoadPokemonsEvent>(
       _onLoadPokemonsEvent,
       transformer: throttleDroppable(throttleDuration),
-    );
-    on<NoInternetEvent>(
-      _onNoInternetEvent,
     );
   }
 
@@ -53,9 +47,8 @@ class PokeBloc extends Bloc<PokeEvent, PokeState> {
       if (state.hasReachedMax) {
         return;
       }
-      final PokePage pokePage = await pokemonPageUsecase.call(
-        params: state.pokeList.length,
-      );
+      final PokePage pokePage =
+          await pokemonPageUsecase.call(params: state.pokeList.length);
       return pokePage.hasNext
           ? emit(state.copyWith(
               status: PokeStatus.success,
@@ -64,22 +57,6 @@ class PokeBloc extends Bloc<PokeEvent, PokeState> {
                 ..addAll(pokePage.pokeList!),
             ))
           : emit(state.copyWith(hasReachedMax: true));
-    } catch (e) {
-      emit(state.copyWith(status: PokeStatus.failure));
-    }
-  }
-
-  Future<void> _onNoInternetEvent(
-    PokeEvent event,
-    Emitter<PokeState> emit,
-  ) async {
-    try {
-      final PokePage pokePage = await pokemonPageFromDbUsecase.call();
-      return emit(state.copyWith(
-        status: PokeStatus.offline,
-        hasReachedMax: false,
-        pokeList: pokePage.pokeList,
-      ));
     } catch (e) {
       emit(state.copyWith(status: PokeStatus.failure));
     }

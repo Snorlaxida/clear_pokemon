@@ -28,9 +28,6 @@ class MainApp extends StatelessWidget {
           BlocProvider<NavCubit>(
             create: (BuildContext context) => sl(),
           ),
-          BlocProvider<InternetCubit>(
-            create: (BuildContext context) => sl(),
-          ),
           BlocProvider<PokemonDetailsCubit>(
             create: (BuildContext context) => sl(),
           ),

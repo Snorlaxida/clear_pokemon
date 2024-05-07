@@ -1,6 +1,6 @@
 part of 'poke_bloc.dart';
 
-enum PokeStatus { initial, success, failure, offline }
+enum PokeStatus { initial, success, failure }
 
 final class PokeState extends Equatable {
   const PokeState({
@@ -23,11 +23,6 @@ final class PokeState extends Equatable {
       pokeList: pokeList ?? this.pokeList,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
-  }
-
-  @override
-  String toString() {
-    return '''PostState { status: $status, hasReachedMax: $hasReachedMax, posts: ${pokeList.length} }''';
   }
 
   @override
